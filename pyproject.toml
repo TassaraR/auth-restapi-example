@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "microservicestest"
+version = "0.1.0"
+description = "Add your description here"
+classifiers = ["Private :: Do Not Upload"]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.115.8",
+    "pyjwt>=2.10.1",
+    "uvicorn>=0.34.0",
+]
