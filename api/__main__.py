@@ -35,7 +35,7 @@ async def add_user(user_data: UserRequest):
         if is_user:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
 
-        hashed_password = PasswordManager().get_password_hash(user_data.password)
+        hashed_password = PasswordManager.get_password_hash(user_data.password)
 
         user = UserCreate(
             username=user_data.username,
