@@ -51,9 +51,7 @@ async def get_current_user(
     return user
 
 
-async def get_current_active_user(
-    self, current_user: Annotated[UserBase, Depends(get_current_user)]
-):
+async def get_current_active_user(current_user: Annotated[UserBase, Depends(get_current_user)]):
     if current_user.disabled:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
     return current_user
@@ -63,9 +61,7 @@ def authenticate_user(username: str, password: str) -> UserBase | bool:
     user = get_user(username=username)
     if not user:
         return False
-    if not PasswordManager().verify_password(
-        plain_password=password, hashed_password=user.password
-    ):
+    if not PasswordManager.verify_password(plain_password=password, hashed_password=user.password):
         return False
     return user
 
