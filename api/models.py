@@ -15,8 +15,8 @@ class TokenData(BaseModel):
 
 class UserBase(SQLModel):
     username: str = Field(..., unique=True, index=True)
-    email: str | None = Field(default=None)
-    full_name: str | None = Field(default=None)
+    email: str = Field(...)
+    full_name: str = Field(...)
 
 
 class UserRequest(UserBase):
@@ -26,5 +26,5 @@ class UserRequest(UserBase):
 class UserCreate(UserRequest, table=True):
     __tablename__ = "users"
 
-    uid: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    uid: uuid.UUID | None = Field(default=None, default_factory=uuid.uuid4, primary_key=True)
     disabled: bool = Field(default=False)
