@@ -10,11 +10,11 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
-from passlib.context import CryptContext
 from sqlmodel import Session, create_engine, select
 
 from api.database import init_db
 from api.models import Token, TokenData, UserBase, UserCreate, UserRequest
+from api.password import PasswordManager
 
 load_dotenv()
 
@@ -22,7 +22,6 @@ with pkg_resources.path("api", "../data/duck.db") as db_path:
     DATABASE_URL = f"duckdb:///{db_path}"
 engine = create_engine(DATABASE_URL, echo=False)
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
@@ -34,15 +33,6 @@ async def lifespan(app: FastAPI):  # noqa
 
 
 app = FastAPI(lifespan=lifespan)
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verifies is user password is correct"""
-    return pwd_context.verify(secret=plain_password, hash=hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
 
 
 def get_user(username: str) -> UserCreate | None:
@@ -59,12 +49,14 @@ def authenticate_user(username: str, password: str) -> UserBase | bool:
     user = get_user(username=username)
     if not user:
         return False
-    if not verify_password(plain_password=password, hashed_password=user.password):
+    if not PasswordManager().verify_password(
+        plain_password=password, hashed_password=user.password
+    ):
         return False
     return user
 
 
-def create_access_token(data: dict, expire_deltas: datetime.timedelta | None = None):
+def create_access_token(data: dict, expire_deltas: datetime.timedelta | None = None) -> str:
     """Creates access token based on sub(subject) and exp(expiration)"""
     to_encode = data.copy()
     if expire_deltas:
@@ -119,7 +111,7 @@ async def add_user(user_data: UserRequest):
         if is_user:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
 
-        hashed_password = get_password_hash(user_data.password)
+        hashed_password = PasswordManager().get_password_hash(user_data.password)
 
         user = UserCreate(
             username=user_data.username,
