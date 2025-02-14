@@ -26,5 +26,5 @@ class UserRequest(UserBase):
 class UserCreate(UserRequest, table=True):
     __tablename__ = "users"
 
-    uid: uuid.UUID | None = Field(default=None, default_factory=uuid.uuid4, primary_key=True)
+    uid: uuid.UUID = Field(..., default_factory=uuid.uuid4, primary_key=True)
     disabled: bool = Field(default=False)
