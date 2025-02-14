@@ -1,4 +1,9 @@
+import logging
+
 from passlib.context import CryptContext
+
+# Ignores: module 'bcrypt' has no attribute '__about__'
+logging.getLogger("passlib").setLevel(logging.ERROR)
 
 
 class PasswordManager:
