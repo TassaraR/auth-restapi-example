@@ -19,7 +19,7 @@ load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # noqa
-    """Creates duckdb database if it does not exist"""
+    """Performs duckdb database migration"""
     init_db(engine)
     yield
 
