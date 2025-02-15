@@ -10,9 +10,9 @@ classifiers = ["Private :: Do Not Upload"]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "bcrypt>=4.2.1",
     "duckdb-engine>=0.15.0",
     "fastapi>=0.115.8",
-    "passlib[bcrypt]>=1.7.4",
     "pyjwt>=2.10.1",
     "python-dotenv>=1.0.1",
     "python-multipart>=0.0.20",

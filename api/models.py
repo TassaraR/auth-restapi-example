@@ -20,7 +20,7 @@ class UserBase(SQLModel):
 
 
 class UserRequest(UserBase):
-    password: str = Field(..., description="Hashed password")
+    password: str = Field(..., description="raw password")
 
 
 class UserCreate(UserRequest, table=True):
@@ -28,3 +28,4 @@ class UserCreate(UserRequest, table=True):
 
     uid: uuid.UUID = Field(..., default_factory=uuid.uuid4, primary_key=True)
     disabled: bool = Field(default=False)
+    password: bytes = Field(..., description="hashed password")
