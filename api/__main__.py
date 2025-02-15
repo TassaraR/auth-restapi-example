@@ -78,12 +78,5 @@ async def read_users_me(
     return current_user
 
 
-@app.get("/users/me/items/")
-async def read_own_items(
-    current_user: Annotated[UserBase, Depends(get_current_active_user)],
-) -> list[dict]:
-    return [{"item_id": "Foo", "owner": current_user.username}]
-
-
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
