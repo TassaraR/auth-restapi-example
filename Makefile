@@ -6,3 +6,6 @@ run:
 
 remove-db:
 	@rm data/duck.db
+
+test:
+	@uv run pytest .
